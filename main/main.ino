@@ -36,52 +36,30 @@ void loop() {
 
 
   if (client) {
-    bool currentLineIsBlank = true;
+    bool currentLineIsBlank = false;
     request = "";
     while (client.connected()) {
-      if (client.available()) {
+      if (client.available() >= 2) {
         char reqChar = client.read();  // read 1 byte (character) from client
+
+        if(currentLineIsBlank == true)
+          continue;
+        else if (reqChar == '\n' && request.length() > 0)  {
+          currentLineIsBlank = true;
+          continue;
+        }  
         request += reqChar;
 
-        if (request == "GET /") {
-          // send a standard http response header
-          client.println("HTTP/1.1 200 OK\n\rContent-Type: text/html\n\r\n\r");
-          // send web page
-          webFile = SD.open("index.htm");
-          if (webFile) {
-            Serial.println("webfile");
-            while (webFile.available()) {
-              char s = webFile.read();
-              client.write(s);  // send web page to client
-              Serial.print(s);
-            }
-            webFile.close();
-          }
-          // client.println("HTTP/1.1 200 OK\n\rContent-Type: text/css\n\r\n\r");
-          // webFile = SD.open("style.css");
-          // if (webFile) {
-          //   while (webFile.available()) {
-          //     client.write(webFile.read());  // send web page to client
-          //   }
-          //   webFile.close();
-          // }
-          break;
-        }
-        // else {
-        //   client.println("HTTP/1.1 404 Not Found\n\r"); {
-        //   break;
-        //   }
-        // }
 
-        // every line of text received from the client ends with \r\n
-        if (reqChar == '\n') {
-          // last character on line of received text
-          // starting new line with next character read
-          currentLineIsBlank = true;
-        } else if (reqChar != '\r') {
-          // a text character was received from client
-          currentLineIsBlank = false;
-        }
+        // // every line of text received from the client ends with \r\n
+        // if (reqChar == '\n') {
+        //   // last character on line of received text
+        //   // starting new line with next character read
+        //   currentLineIsBlank = true;
+        // } else if (reqChar != '\r') {
+        //   // a text character was received from client
+        //   currentLineIsBlank = false;
+        // }
 
         //Translate the user request and check to switch on or off the fan
         if (request.indexOf("?switchOn") > 0) {
@@ -92,11 +70,44 @@ void loop() {
           //digitalWrite(fan, LOW);
         }
       }
+      else if (client.available() == 1) {
+        client.read();
+        Serial.println("Request");
+        Serial.println(request);
+        if(request.length() > 0) {
+          if(request.startsWith("GET /")) {
+              // send a standard http response header
+              client.println("HTTP/1.1 200 OK\n\rContent-Type: text/html\n\r\n\r");
+              // send web page
+              webFile = SD.open("index.htm");
+              if (webFile) {
+                Serial.println("Sending webfile");
+                while (webFile.available()) {
+                  char s = webFile.read();
+                  client.write(s);  // send web page to client
+                }
+                webFile.close();
+              }
+              // client.println("HTTP/1.1 200 OK\n\rContent-Type: text/css\n\r\n\r");
+              // webFile = SD.open("style.css");
+              // if (webFile) {
+              //   while (webFile.available()) {
+              //     client.write(webFile.read());  // send web page to client
+              //   }
+              //   webFile.close();
+              // }
+              break;
+          }
+          else {
+            Serial.println("404");
+            client.println("HTTP/1.1 404 Not Found\n\r"); 
+            break;
+          }
+        }
+      }
     }
 
     delay(1);      // give the web browser time to receive the data
     client.stop(); // close the connection
-    Serial.print("Request: ");
-    Serial.println(request);
   }
 }
