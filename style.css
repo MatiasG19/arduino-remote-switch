@@ -13,16 +13,16 @@ width: 100px;
 height: 34px;
 }
 
-.onButton {
+.powerOnButton {
 background-color: #04e486;
 }
 
-.onButton:hover {
+.powerOnButton:hover {
 background-color: #60ebb1;
 color: black;
 }
 
-.onButton:active {
+.powerOnButton:active {
 background-color: #08b16b;
 color: white;
 }

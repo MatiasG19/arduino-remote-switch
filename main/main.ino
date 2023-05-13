@@ -1,12 +1,9 @@
-#include <SPI.h>
 #include <Ethernet.h>
 #include <SD.h>
 
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 IPAddress ip(192, 168, 0, 10);
 EthernetServer server(80);
-File webFile;
-String request;
 
 void setup() {
   Serial.begin(9600);
@@ -33,7 +30,7 @@ void setup() {
 
 void loop() {
   EthernetClient client = server.available();
-
+  String request;
 
   if (client) {
     bool currentLineIsBlank = false;
@@ -49,59 +46,17 @@ void loop() {
           continue;
         }  
         request += reqChar;
-
-
-        // // every line of text received from the client ends with \r\n
-        // if (reqChar == '\n') {
-        //   // last character on line of received text
-        //   // starting new line with next character read
-        //   currentLineIsBlank = true;
-        // } else if (reqChar != '\r') {
-        //   // a text character was received from client
-        //   currentLineIsBlank = false;
-        // }
-
-        //Translate the user request and check to switch on or off the fan
-        if (request.indexOf("?switchOn") > 0) {
-          //digitalWrite(fan, HIGH);
-        } else if (request.indexOf("?standBy") > 0) {
-          //digitalWrite(fan, LOW);
-        } else if (request.indexOf("?reset") > 0) {
-          //digitalWrite(fan, LOW);
-        }
       }
       else {
-        Serial.println("Request");
+        Serial.print("Request: ");
         Serial.println(request);
         if(request.length() > 0) {
           if(request.startsWith("GET /")) {
               request.replace("GET /", "");
-              sendWebFile(request.substring(0, request.indexOf(" ")), client);
-
-              // // send a standard http response header
-              // client.println("HTTP/1.1 200 OK\n\rContent-Type: text/html\n\r\n\r");
-              // // send web page
-              // webFile = SD.open("index.htm");
-              // if (webFile) {
-              //   Serial.println("Sending webfile");
-              //   while (webFile.available()) {
-              //     char s = webFile.read();
-              //     client.write(s);  // send web page to client
-              //   }
-              //   webFile.close();
-              // }
-              // client.println("HTTP/1.1 200 OK\n\rContent-Type: text/css\n\r\n\r");
-              // webFile = SD.open("style.css");
-              // if (webFile) {
-              //   while (webFile.available()) {
-              //     client.write(webFile.read());  // send web page to client
-              //   }
-              //   webFile.close();
-              // }
+              sendResponse(request.substring(0, request.indexOf(" ")), client);
               break;
           }
           else {
-            Serial.println("404");
             client.println("HTTP/1.1 404 Not Found\n\r"); 
             break;
           }
@@ -114,14 +69,35 @@ void loop() {
   }
 }
 
-void sendWebFile(String fileName, EthernetClient client) {
-  Serial.println(fileName);
-  client.println("HTTP/1.1 200 OK\n\rContent-Type: text/html\n\r\n\r");
-  webFile = SD.open(fileName);
+void sendResponse(String req, EthernetClient client) {
+  client.println("HTTP/1.1 200 OK");
+  if(req == "") req = "index.htm";
+
+  if(req.endsWith(".htm")) {
+    client.println("Content-Type: text/html\n\r\n\r");
+  }
+  else 
+    client.println("\n\r\n\r");
+
+  File webFile = SD.open(req);
   if (webFile) {
     while (webFile.available()) {
       client.write(webFile.read());  // send web page to client
     }
     webFile.close();
+  } 
+  else {
+    if(req == "powerOn") {
+      // TODO
+    }
+    else if(req == "standBy") {
+      // TODO
+    }
+    else if(req == "reset") {
+      // TODO
+    }
+    else {
+      client.println("HTTP/1.1 404 Not Found\n\r"); 
+    }
   }
 }

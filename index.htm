@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>STEALTHMACHINE Switch</title>
-    <!--<a href="https://www.flaticon.com/free-icons/power" title="power icons">Power icons created by Gregor Cresnar - Flaticon</a> -->
+    <title>STORINATOR Switch</title>
     <link rel="icon" type="image/png" href="power.png" />
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h2>STEALTHMACHINE</h2>
+    <h2>STORINATOR</h2>
 
     <div class="statusContainer">
       <div class="led-box">
@@ -21,7 +20,9 @@
     </div>
 
     <div class="operationContainer">
-      <button type="button" class="onButton" onclick="switchOn()">ON</button>
+      <button type="button" class="powerOnButton" onclick="powerOn()">
+        ON
+      </button>
       <button type="button" class="standbyButton" onclick="standBy()">
         STANDBY
       </button>
@@ -31,8 +32,8 @@
     <script>
       var state = false
 
-      function switchOn() {
-        RequestMachine('switchOn')
+      function powerOn() {
+        RequestMachine('powerOn')
       }
 
       function standBy() {
@@ -66,9 +67,12 @@
       }
 
       function RequestMachine(type) {
+        if (!confirm(type.toUpperCase())) return
+
         var xhttp = new XMLHttpRequest()
         xhttp.onreadystatechange = function () {
           if (this.readyState == 4 && this.status == 200) {
+            alert('Action confirmed.')
             console.log(this.responseText)
           }
         }
