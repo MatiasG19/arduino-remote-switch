@@ -1,6 +1,8 @@
 # Arduino remote switch
 Remote switch to turn on PC.
 
+![Web interface](./web.png)
+
 ## Getting started
 
 ### Hardware
