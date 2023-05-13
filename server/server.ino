@@ -5,6 +5,13 @@ byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 IPAddress ip(192, 168, 0, 10);
 EthernetServer server(80);
 
+const int IN_PIN_POWER_LED = 6, IN_PIN_HDD_LED = 7;
+const int OUT_PIN_POWER = 9, OUT_PIN_RESET = 10;
+
+bool powerOn;
+bool standBy;
+bool reset;
+
 void setup() {
   Serial.begin(9600);
   Ethernet.begin(mac, ip);
@@ -26,9 +33,15 @@ void setup() {
     return;
   }
   Serial.println("SUCCESS - Found file.");
+
+  pinMode(IN_PIN_POWER_LED, INPUT);
+  pinMode(IN_PIN_HDD_LED, INPUT);
+  pinMode(OUT_PIN_POWER, OUTPUT);
+  pinMode(OUT_PIN_RESET, OUTPUT);
 }
 
 void loop() {
+  // Server
   EthernetClient client = server.available();
   String request;
 
@@ -67,6 +80,18 @@ void loop() {
     delay(1);      // give the web browser time to receive the data
     client.stop(); // close the connection
   }
+
+  // Control outputs
+  if(powerOn) {
+    controlOutput(OUT_PIN_POWER, 500);
+    powerOn = false;
+  } else if(standBy) {
+    controlOutput(OUT_PIN_POWER, 500);
+    standBy = false;
+  } else if(reset) {
+    controlOutput(OUT_PIN_RESET, 3000);
+    reset = false;
+  }
 }
 
 void sendResponse(String req, EthernetClient client) {
@@ -87,17 +112,24 @@ void sendResponse(String req, EthernetClient client) {
     webFile.close();
   } 
   else {
-    if(req == "powerOn") {
-      // TODO
+    if(req == "powerOn" && !digitalRead(IN_PIN_POWER_LED)) {
+      powerOn = true;
     }
-    else if(req == "standBy") {
-      // TODO
+    else if(req == "standBy" && digitalRead(IN_PIN_POWER_LED)) {
+      standBy = true;
     }
     else if(req == "reset") {
-      // TODO
+      reset = true;
     }
     else {
       client.println("HTTP/1.1 404 Not Found\n\r"); 
     }
   }
+}
+
+void controlOutput(int output, int delayTime) {
+  digitalWrite(output, HIGH); 
+  delay(delayTime);              
+  digitalWrite(output, LOW);
+  delay(3000); 
 }
