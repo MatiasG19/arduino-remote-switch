@@ -1,76 +1,80 @@
 <!DOCTYPE html>
 <html>
-<head>
-  <title>Toggle Switch</title>
-  <style>
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 60px;
-      height: 34px;
-    }
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: #ccc;
-      -webkit-transition: .4s;
-      transition: .4s;
-    }
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 26px;
-      width: 26px;
-      left: 4px;
-      bottom: 4px;
-      background-color: white;
-      -webkit-transition: .4s;
-      transition: .4s;
-    }
-    input:checked + .slider {
-      background-color: #2196F3;
-    }
-    input:focus + .slider {
-      box-shadow: 0 0 1px #2196F3;
-    }
-    input:checked + .slider:before {
-      -webkit-transform: translateX(26px);
-      -ms-transform: translateX(26px);
-      transform: translateX(26px);
-    }
-  </style>
-</head>
-<body>
+  <head>
+    <title>Toggle Switch</title>
+    <!--<a href="https://www.flaticon.com/free-icons/power" title="power icons">Power icons created by Gregor Cresnar - Flaticon</a> -->
+    <link rel="icon" type="image/png" href="power.png" />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <h2>STEALTHMACHINE</h2>
 
-<h2>Toggle Switch</h2>
+    <div class="statusContainer">
+      <div class="led-box">
+        <div id="powerLed" class="led-off"></div>
+        <p>Power</p>
+      </div>
+      <div class="led-box">
+        <div id="hddLed" class="led-off"></div>
+        <p>HDD</p>
+      </div>
+    </div>
 
-<label class="switch">
-  <input type="checkbox" onclick="toggleLED()">
-  <span class="slider"></span>
-</label>
+    <div class="operationContainer">
+      <button type="button" class="onButton" onclick="switchOn()">ON</button>
+      <button type="button" class="standbyButton" onclick="standBy()">
+        STANDBY
+      </button>
+      <button type="button" class="resetButton" onclick="reset()">RESET</button>
+    </div>
 
-<script>
-function toggleLED() {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-     console.log(this.responseText);
-    }
-  };
-  xhttp.open("GET", "toggleLED", true);
-  xhttp.send();
-}
-</script>
+    <script>
+      var state = false
 
-</body>
+      function switchOn() {
+        RequestMachine('switchOn')
+      }
+
+      function standBy() {
+        RequestMachine('standBy')
+      }
+
+      function reset() {
+        RequestMachine('reset')
+      }
+
+      function togglePowerLed(state) {
+        const powerLed = document.getElementById('powerLed')
+        if (state) {
+          powerLed.classList.remove('led-off')
+          powerLed.classList.add('led-green')
+        } else {
+          powerLed.classList.remove('led-green')
+          powerLed.classList.add('led-off')
+        }
+      }
+
+      function toggleHddLed(state) {
+        const hddLed = document.getElementById('hddLed')
+        if (state) {
+          hddLed.classList.remove('led-off')
+          hddLed.classList.add('led-blue')
+        } else {
+          hddLed.classList.remove('led-blue')
+          hddLed.classList.add('led-off')
+        }
+      }
+
+      function RequestMachine(type) {
+        var xhttp = new XMLHttpRequest()
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            console.log(this.responseText)
+          }
+        }
+        xhttp.open('GET', type, true)
+        xhttp.send()
+      }
+    </script>
+  </body>
 </html>
-

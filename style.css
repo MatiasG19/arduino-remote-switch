@@ -1,0 +1,102 @@
+body {
+    font-family: 'Lucida Console', 'Courier New', monospace;
+}
+
+.operationContainer {
+
+}
+
+button {
+position: relative;
+display: inline-block;
+width: 100px;
+height: 34px;
+}
+
+.onButton {
+background-color: #04e486;
+}
+
+.onButton:hover {
+background-color: #60ebb1;
+color: black;
+}
+
+.onButton:active {
+background-color: #08b16b;
+color: white;
+}
+
+.standbyButton {
+background-color: #ee7707;
+}
+
+.standbyButton:hover {
+background-color: #f09b4c;
+color: white;
+}
+
+.standbyButton:active {
+background-color: #c26208;
+color: white;
+}
+
+.resetButton {
+background-color: #d60656;
+}
+
+.resetButton:hover {
+background-color: #cf4376;
+color: black;
+}
+
+.resetButton:active {
+background-color: #b41f56;
+color: white;
+}
+
+/**********************************************/
+/* Status */
+/**********************************************/
+.statusContainer {
+margin: 30px;
+}
+
+.led-box {
+  height: 30px;
+  margin: 10px 30px;
+  display: inline-block;
+}
+
+.led-box p {
+  font-size: 12px;
+  text-align: center;
+  margin: 1em;
+}
+
+.led-green {
+    margin: 0 auto;
+    width: 24px;
+    height: 24px;
+    background-color: #aee9d0;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #08b16b 0 -1px 9px, #42e4a0 0 2px 12px;
+}
+
+.led-blue {
+    margin: 0 auto;
+    width: 24px;
+    height: 24px;
+    background-color: #24E0FF;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset rgb(59, 59, 190) 0 -1px 9px, #3F8CFF 0 2px 14px;
+}
+
+.led-off {
+    margin: 0 auto;
+    width: 24px;
+    height: 24px;
+    background-color: #ffffff;
+    border-radius: 50%;
+    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset rgb(65, 65, 73) 0 -1px 9px, #ffffff 0 2px 14px;
+}
