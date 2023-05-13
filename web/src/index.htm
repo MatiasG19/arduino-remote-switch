@@ -7,67 +7,35 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h2>STORINATOR</h2>
+    <div class="heading">STORINATOR</div>
 
-    <div class="statusContainer">
-      <div class="led-box">
-        <div id="powerLed" class="led-off"></div>
-        <p>Power</p>
-      </div>
-      <div class="led-box">
-        <div id="hddLed" class="led-off"></div>
-        <p>HDD</p>
-      </div>
-    </div>
-
-    <div class="operationContainer">
-      <button type="button" class="powerOnButton" onclick="powerOn()">
-        POWER ON
-      </button>
-      <button type="button" class="standbyButton" onclick="standBy()">
-        STANDBY
-      </button>
-      <button type="button" class="resetButton" onclick="reset()">RESET</button>
-      <button type="button" class="hddButton">HDD</button>
-    </div>
+    <button
+      id="powerBtn"
+      type="button"
+      class="activeButton"
+      onclick="RequestMachine('powerOn')"
+    >
+      POWER ON
+    </button>
+    <button
+      id="standByBtn"
+      type="button"
+      class="activeButton"
+      onclick="RequestMachine('standBy')"
+    >
+      STANDBY
+    </button>
+    <button
+      id="resetBtn"
+      type="button"
+      class="activeButton"
+      onclick="RequestMachine('reset')"
+    >
+      RESET
+    </button>
+    <button id="hddBtn" type="button">HDD</button>
 
     <script>
-      var state = false
-
-      function powerOn() {
-        RequestMachine('powerOn')
-      }
-
-      function standBy() {
-        RequestMachine('standBy')
-      }
-
-      function reset() {
-        RequestMachine('reset')
-      }
-
-      function togglePowerLed(state) {
-        const powerLed = document.getElementById('powerLed')
-        if (state) {
-          powerLed.classList.remove('led-off')
-          powerLed.classList.add('led-green')
-        } else {
-          powerLed.classList.remove('led-green')
-          powerLed.classList.add('led-off')
-        }
-      }
-
-      function toggleHddLed(state) {
-        const hddLed = document.getElementById('hddLed')
-        if (state) {
-          hddLed.classList.remove('led-off')
-          hddLed.classList.add('led-blue')
-        } else {
-          hddLed.classList.remove('led-blue')
-          hddLed.classList.add('led-off')
-        }
-      }
-
       function RequestMachine(type) {
         if (!confirm(type.toUpperCase())) return
 
