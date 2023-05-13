@@ -39,7 +39,7 @@ void loop() {
     bool currentLineIsBlank = false;
     request = "";
     while (client.connected()) {
-      if (client.available() >= 2) {
+      if (client.available()) {
         char reqChar = client.read();  // read 1 byte (character) from client
 
         if(currentLineIsBlank == true)
@@ -70,24 +70,26 @@ void loop() {
           //digitalWrite(fan, LOW);
         }
       }
-      else if (client.available() == 1) {
-        client.read();
+      else {
         Serial.println("Request");
         Serial.println(request);
         if(request.length() > 0) {
           if(request.startsWith("GET /")) {
-              // send a standard http response header
-              client.println("HTTP/1.1 200 OK\n\rContent-Type: text/html\n\r\n\r");
-              // send web page
-              webFile = SD.open("index.htm");
-              if (webFile) {
-                Serial.println("Sending webfile");
-                while (webFile.available()) {
-                  char s = webFile.read();
-                  client.write(s);  // send web page to client
-                }
-                webFile.close();
-              }
+              request.replace("GET /", "");
+              sendWebFile(request.substring(0, request.indexOf(" ")), client);
+
+              // // send a standard http response header
+              // client.println("HTTP/1.1 200 OK\n\rContent-Type: text/html\n\r\n\r");
+              // // send web page
+              // webFile = SD.open("index.htm");
+              // if (webFile) {
+              //   Serial.println("Sending webfile");
+              //   while (webFile.available()) {
+              //     char s = webFile.read();
+              //     client.write(s);  // send web page to client
+              //   }
+              //   webFile.close();
+              // }
               // client.println("HTTP/1.1 200 OK\n\rContent-Type: text/css\n\r\n\r");
               // webFile = SD.open("style.css");
               // if (webFile) {
@@ -109,5 +111,17 @@ void loop() {
 
     delay(1);      // give the web browser time to receive the data
     client.stop(); // close the connection
+  }
+}
+
+void sendWebFile(String fileName, EthernetClient client) {
+  Serial.println(fileName);
+  client.println("HTTP/1.1 200 OK\n\rContent-Type: text/html\n\r\n\r");
+  webFile = SD.open(fileName);
+  if (webFile) {
+    while (webFile.available()) {
+      client.write(webFile.read());  // send web page to client
+    }
+    webFile.close();
   }
 }
