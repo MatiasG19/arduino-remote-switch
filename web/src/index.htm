@@ -9,13 +9,7 @@
   <body>
     <div class="heading">STORINATOR</div>
 
-    <button
-      id="powerStatus"
-      type="button"
-      class="button"
-      disabled
-      style="height: 5%; font-size: 2vh; color: #b413ff"
-    >
+    <button id="powerStatus" type="button" class="statusButton" disabled>
       NO CONNECTION
     </button>
     <button
@@ -88,6 +82,23 @@
         background-color: #313131;
       }
 
+      .statusButton {
+        height: 5%;
+        font-size: 2vh;
+        color: #b413ff;
+        box-shadow: 0px 0px 2vh #b413ff;
+        animation: status-shadow ease-in-out 7s infinite alternate;
+      }
+
+      @keyframes status-shadow {
+        0% {
+          box-shadow: 0px 0px 3vh #1f1e29;
+        }
+        100% {
+          box-shadow: 0px 0px 3vh currentcolor;
+        }
+      }
+
       .activeButton {
         cursor: pointer;
       }
@@ -127,12 +138,15 @@
         if (state == 'on') {
           powerStatus.textContent = 'POWERED ON'
           powerStatus.style.color = '#27e670'
+          powerStatus.style.boxShadow.color = '#27e670'
         } else if (state == 'off') {
           powerStatus.textContent = 'POWERED OFF'
           powerStatus.style.color = '#eb1e8f'
+          powerStatus.style.boxShadow.color = '#eb1e8f'
         } else {
-          powerStatus.style.color = '#b413ff'
           powerStatus.textContent = 'NO CONNECTION'
+          powerStatus.style.color = '#b413ff'
+          powerStatus.style.boxShadow.color = '#b413ff'
         }
       }
 
