@@ -9,59 +9,68 @@
   <body>
     <div class="heading">STORINATOR</div>
 
-    <button
-    id="powerLed"
-    type="button"
-    class="button"
-    disabled>
-    POWER LED
+    <button id="powerLed" type="button" class="button" disabled>
+      NO CONNECTION
     </button>
     <button
       id="powerBtn"
       type="button"
       class="activeButton"
-      onclick="sendCommand(CMD_POWER_ON)">
+      onclick="sendCommand(CMD_POWER_ON)"
+    >
       POWER ON
     </button>
     <button
       id="standByBtn"
       type="button"
       class="activeButton"
-      onclick="sendCommand(CMD_STAND_BY)">
+      onclick="sendCommand(CMD_STAND_BY)"
+    >
       STANDBY
     </button>
     <button
       id="resetBtn"
       type="button"
       class="activeButton"
-      onclick="sendCommand(CMD_RESET)">
+      onclick="sendCommand(CMD_RESET)"
+    >
       RESET
     </button>
     <button
       id="killBtn"
       type="button"
       class="activeButton"
-      onclick="sendCommand(CMD_KILL)">
+      onclick="sendCommand(CMD_KILL)"
+    >
       KILL
-  </button>
+    </button>
 
-  <a href="https://github.com/MatiasG19/arduino-remote-switch">Arduino Remote Switch on GitHub</a>
+    <a href="https://github.com/MatiasG19/arduino-remote-switch"
+      >Arduino Remote Switch on GitHub</a
+    >
 
     <script>
-      const CMD_POWER_ON = "powerOn", CMD_STAND_BY = "standBy", CMD_RESET = "reset", CMD_KILL = "kill"
-      const REQ_POWER_STATUS = "powerStatus"
+      const CMD_POWER_ON = 'powerOn',
+        CMD_STAND_BY = 'standBy',
+        CMD_RESET = 'reset',
+        CMD_KILL = 'kill'
+      const REQ_POWER_STATUS = 'powerStatus'
 
-      setInterval(() =>  {
-        togglePowerLedColor(true)
+      setInterval(() => {
         requestStatus(REQ_POWER_STATUS)
       }, 3000)
 
       function togglePowerLedColor(state) {
         const powerLed = document.getElementById('powerLed')
-        if (state) {
-          powerLed.style.color = "#27e670"
+        if (state == 'on') {
+          powerLed.textContent = 'POWER LED'
+          powerLed.style.color = '#27e670'
+        } else if (state == 'off') {
+          powerLed.textContent = 'POWER LED'
+          powerLed.style.color = '#eb1e8f'
         } else {
-          powerLed.style.color = "#eb1e8f"
+          powerLed.style.color = '#cfcfcf'
+          powerLed.textContent = 'NO CONNECTION'
         }
       }
 
@@ -84,12 +93,17 @@
         xhttp.onreadystatechange = function () {
           if (this.readyState == 4 && this.status == 200) {
             console.debug(`requestStatus:${request}:${this.responseText}`)
-            if(request == REQ_POWER_STATUS && typeof this.response === "string") {
-              if(this.response.toString().includes(REQ_POWER_STATUS+":on"))
-                togglePowerLedColor(true)
-              else
-                togglePowerLedColor(false)
+            if (
+              request == REQ_POWER_STATUS &&
+              typeof this.response === 'string'
+            ) {
+              if (this.response.toString().includes(REQ_POWER_STATUS + ':on'))
+                togglePowerLedColor('on')
+              else togglePowerLedColor('off')
             }
+          } else if (this.readyState == 4 && this.status == 404) {
+            togglePowerLedColor('nocon')
+            console.log('No connection to server.')
           }
         }
         xhttp.open('GET', request, true)
