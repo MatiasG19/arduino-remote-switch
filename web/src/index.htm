@@ -7,32 +7,42 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <h2>STORINATOR</h2>
+    <div class="heading">STORINATOR</div>
 
-    <div class="statusContainer">
-      <div class="led-box">
-        <div id="powerLed" class="led-off"></div>
-        <p>Power</p>
-      </div>
-    </div>
-
-    <div class="operationContainer">
-      <button type="button" class="powerOnButton" onclick="sendCommand(CMD_POWER_ON)">
-        ON
-      </button>
-      <button type="button" class="standbyButton" onclick="sendCommand(CMD_STAND_BY)">
-        STANDBY
-      </button>
-      <button type="button" class="resetButton" onclick="sendCommand(CMD_RESET)">
-        RESET
-      </button>
-      <button type="button" class="killButton" onclick="sendCommand(CMD_KILL)">
-        KILL
-      </button>
-    </div>
+    <button
+      id="powerBtn"
+      type="button"
+      class="activeButton"
+      onclick="sendCommand(CMD_POWER_ON)"
+    >
+      POWER ON
+    </button>
+    <button
+      id="standByBtn"
+      type="button"
+      class="activeButton"
+      onclick="sendCommand(CMD_STAND_BY)"
+    >
+      STANDBY
+    </button>
+    <button
+      id="resetBtn"
+      type="button"
+      class="activeButton"
+      onclick="sendCommand(CMD_RESET)"
+    >
+      RESET
+    </button>
+    <button
+      id="killBtn"
+      type="button"
+      class="activeButton"
+      onclick="sendCommand(CMD_KILL)"
+    >
+      KILL
+  </button>
 
     <script>
-      var state = false
       const CMD_POWER_ON = "powerOn", CMD_STAND_BY = "standBy", CMD_RESET = "reset", CMD_KILL = "kill"
       const REQ_POWER_STATUS = "powerStatus"
 
@@ -40,19 +50,17 @@
         requestStatus(REQ_POWER_STATUS)
       }, 3000)
 
-      function togglePowerLed(state) {
-        const powerLed = document.getElementById('powerLed')
+      function togglePowerButtonColor(state) {
+        const powerBtn = document.getElementById('powerBtn')
         if (state) {
-          powerLed.classList.remove('led-off')
-          powerLed.classList.add('led-green')
+          powerBtn.style.color = "#27e670"
         } else {
-          powerLed.classList.remove('led-green')
-          powerLed.classList.add('led-off')
+          powerBtn.style.color = "#cfcfcf"
         }
       }
 
-      function sendCommand(request) {
-        if (!confirm(request.toUpperCase())) return
+      function sendCommand(type) {
+        if (!confirm(type.toUpperCase())) return
 
         var xhttp = new XMLHttpRequest()
         xhttp.onreadystatechange = function () {
@@ -72,9 +80,9 @@
             console.debug(`requestStatus:${request}:${this.responseText}`)
             if(request == REQ_POWER_STATUS && typeof this.response === "string") {
               if(this.response.toString().includes(REQ_POWER_STATUS+":on"))
-                togglePowerLed(true)
+                togglePowerButtonColor(true)
               else
-                togglePowerLed(false)
+                togglePowerButtonColor(false)
             }
           }
         }

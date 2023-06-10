@@ -1,102 +1,46 @@
-body {
-    font-family: 'Lucida Console', 'Courier New', monospace;
+html {
+  height: 95%;
+  font-family: 'Lucida Console', 'Arial', monospace;
 }
 
-.operationContainer {
+body {
+  background-color: #1f1e29;
+  color: #cfcfcf;
+  height: 95%;
+}
 
+.heading {
+  font-size: 5vh;
+  text-align: center; 
 }
 
 button {
-position: relative;
-display: inline-block;
-width: 100px;
-height: 34px;
-}
-
-.powerOnButton {
-background-color: #04e486;
-}
-
-.powerOnButton:hover {
-background-color: #60ebb1;
-color: black;
-}
-
-.powerOnButton:active {
-background-color: #08b16b;
-color: white;
-}
-
-.standbyButton {
-background-color: #ee7707;
-}
-
-.standbyButton:hover {
-background-color: #f09b4c;
-color: white;
-}
-
-.standbyButton:active {
-background-color: #c26208;
-color: white;
-}
-
-.resetButton {
-background-color: #d60656;
-}
-
-.resetButton:hover {
-background-color: #cf4376;
-color: black;
-}
-
-.resetButton:active {
-background-color: #b41f56;
-color: white;
-}
-
-/**********************************************/
-/* Status */
-/**********************************************/
-.statusContainer {
-margin: 30px;
-}
-
-.led-box {
-  height: 30px;
-  margin: 10px 30px;
+  position: relative;
   display: inline-block;
+  width: calc(100% - 2vw);
+  min-width: 50px;
+  max-width: 200vh;
+  height: 20%;
+  min-height: 50px;
+  border: none;
+  border-radius: 1vw;
+  margin: 1vh 1vw 1vh 1vw;
+  font-size: 10vh;
+
+  color: #cfcfcf;
+  background-color: #313131;
 }
 
-.led-box p {
-  font-size: 12px;
-  text-align: center;
-  margin: 1em;
+.activeButton {
+  cursor: pointer;
 }
 
-.led-green {
-    margin: 0 auto;
-    width: 24px;
-    height: 24px;
-    background-color: #aee9d0;
-    border-radius: 50%;
-    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset #08b16b 0 -1px 9px, #42e4a0 0 2px 12px;
+.activeButton:hover {
+  background-color: #cfcfcf;
+  color: black;
 }
 
-.led-blue {
-    margin: 0 auto;
-    width: 24px;
-    height: 24px;
-    background-color: #24E0FF;
-    border-radius: 50%;
-    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset rgb(59, 59, 190) 0 -1px 9px, #3F8CFF 0 2px 14px;
-}
-
-.led-off {
-    margin: 0 auto;
-    width: 24px;
-    height: 24px;
-    background-color: #ffffff;
-    border-radius: 50%;
-    box-shadow: rgba(0, 0, 0, 0.2) 0 -1px 7px 1px, inset rgb(65, 65, 73) 0 -1px 9px, #ffffff 0 2px 14px;
+.activeButton:active {
+  background-color: #494949;
+  color: #cfcfcf;
 }
