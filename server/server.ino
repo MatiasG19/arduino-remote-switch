@@ -4,9 +4,11 @@
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 IPAddress ip(192, 168, 0, 10);
 EthernetServer server(80);
+long delayStart;
 
 const int IN_PIN_POWER_LED = 7;
 const int OUT_PIN_POWER = 8, OUT_PIN_RESET = 9;
+int POWER_LED_OFF_DELAY = 3000; // ms
 
 // Commands
 bool powerOn, standBy, reset, kill;
@@ -19,6 +21,7 @@ void setup() {
   server.begin();
   Serial.print("Server started at ");
   Serial.println(Ethernet.localIP());
+  delayStart = millis();
 
   // SD card
   Serial.println("Initializing SD card...");
@@ -43,9 +46,11 @@ void setup() {
 
 void loop() {
   // Read inputs
-  if(digitalRead(IN_PIN_POWER_LED) == 0) 
+  if(digitalRead(IN_PIN_POWER_LED) == 0) {
     powerLed = true;
-   else 
+    delayStart = millis();
+  }
+  else if(millis() - delayStart > POWER_LED_OFF_DELAY)
     powerLed = false;
 
   // Server
