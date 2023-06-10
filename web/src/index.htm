@@ -13,7 +13,7 @@
       id="powerBtn"
       type="button"
       class="activeButton"
-      onclick="RequestMachine('powerOn')"
+      onclick="sendCommand(CMD_POWER_ON)"
     >
       POWER ON
     </button>
@@ -21,7 +21,7 @@
       id="standByBtn"
       type="button"
       class="activeButton"
-      onclick="RequestMachine('standBy')"
+      onclick="sendCommand(CMD_STAND_BY)"
     >
       STANDBY
     </button>
@@ -29,24 +29,64 @@
       id="resetBtn"
       type="button"
       class="activeButton"
-      onclick="RequestMachine('reset')"
+      onclick="sendCommand(CMD_RESET)"
     >
       RESET
     </button>
-    <button id="hddBtn" type="button">HDD</button>
+    <button
+      id="killBtn"
+      type="button"
+      class="activeButton"
+      onclick="sendCommand(CMD_KILL)"
+    >
+      KILL
+  </button>
 
     <script>
-      function RequestMachine(type) {
+      const CMD_POWER_ON = "powerOn", CMD_STAND_BY = "standBy", CMD_RESET = "reset", CMD_KILL = "kill"
+      const REQ_POWER_STATUS = "powerStatus"
+
+      setInterval(() =>  {
+        requestStatus(REQ_POWER_STATUS)
+      }, 3000)
+
+      function togglePowerButtonColor(state) {
+        const powerBtn = document.getElementById('powerBtn')
+        if (state) {
+          powerBtn.style.color = "#27e670"
+        } else {
+          powerBtn.style.color = "#cfcfcf"
+        }
+      }
+
+      function sendCommand(type) {
         if (!confirm(type.toUpperCase())) return
 
         var xhttp = new XMLHttpRequest()
         xhttp.onreadystatechange = function () {
           if (this.readyState == 4 && this.status == 200) {
+            console.debug(`sendCommand:${request}:${this.responseText}`)
             alert('Action confirmed.')
-            console.log(this.responseText)
           }
         }
-        xhttp.open('GET', type, true)
+        xhttp.open('GET', request, true)
+        xhttp.send()
+      }
+
+      function requestStatus(request) {
+        var xhttp = new XMLHttpRequest()
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            console.debug(`requestStatus:${request}:${this.responseText}`)
+            if(request == REQ_POWER_STATUS && typeof this.response === "string") {
+              if(this.response.toString().includes(REQ_POWER_STATUS+":on"))
+                togglePowerButtonColor(true)
+              else
+                togglePowerButtonColor(false)
+            }
+          }
+        }
+        xhttp.open('GET', request, true)
         xhttp.send()
       }
     </script>
