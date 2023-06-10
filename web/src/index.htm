@@ -14,36 +14,31 @@
         <div id="powerLed" class="led-off"></div>
         <p>Power</p>
       </div>
-      <div class="led-box">
-        <div id="hddLed" class="led-off"></div>
-        <p>HDD</p>
-      </div>
     </div>
 
     <div class="operationContainer">
-      <button type="button" class="powerOnButton" onclick="powerOn()">
+      <button type="button" class="powerOnButton" onclick="sendCommand(CMD_POWER_ON)">
         ON
       </button>
-      <button type="button" class="standbyButton" onclick="standBy()">
+      <button type="button" class="standbyButton" onclick="sendCommand(CMD_STAND_BY)">
         STANDBY
       </button>
-      <button type="button" class="resetButton" onclick="reset()">RESET</button>
+      <button type="button" class="resetButton" onclick="sendCommand(CMD_RESET)">
+        RESET
+      </button>
+      <button type="button" class="killButton" onclick="sendCommand(CMD_KILL)">
+        KILL
+      </button>
     </div>
 
     <script>
       var state = false
+      const CMD_POWER_ON = "powerOn", CMD_STAND_BY = "standBy", CMD_RESET = "reset", CMD_KILL = "kill"
+      const REQ_POWER_STATUS = "powerStatus"
 
-      function powerOn() {
-        RequestMachine('powerOn')
-      }
-
-      function standBy() {
-        RequestMachine('standBy')
-      }
-
-      function reset() {
-        RequestMachine('reset')
-      }
+      setInterval(() =>  {
+        requestStatus(REQ_POWER_STATUS)
+      }, 3000)
 
       function togglePowerLed(state) {
         const powerLed = document.getElementById('powerLed')
@@ -56,28 +51,34 @@
         }
       }
 
-      function toggleHddLed(state) {
-        const hddLed = document.getElementById('hddLed')
-        if (state) {
-          hddLed.classList.remove('led-off')
-          hddLed.classList.add('led-blue')
-        } else {
-          hddLed.classList.remove('led-blue')
-          hddLed.classList.add('led-off')
-        }
-      }
-
-      function RequestMachine(type) {
-        if (!confirm(type.toUpperCase())) return
+      function sendCommand(request) {
+        if (!confirm(request.toUpperCase())) return
 
         var xhttp = new XMLHttpRequest()
         xhttp.onreadystatechange = function () {
           if (this.readyState == 4 && this.status == 200) {
+            console.debug(`sendCommand:${request}:${this.responseText}`)
             alert('Action confirmed.')
-            console.log(this.responseText)
           }
         }
-        xhttp.open('GET', type, true)
+        xhttp.open('GET', request, true)
+        xhttp.send()
+      }
+
+      function requestStatus(request) {
+        var xhttp = new XMLHttpRequest()
+        xhttp.onreadystatechange = function () {
+          if (this.readyState == 4 && this.status == 200) {
+            console.debug(`requestStatus:${request}:${this.responseText}`)
+            if(request == REQ_POWER_STATUS && typeof this.response === "string") {
+              if(this.response.toString().includes(REQ_POWER_STATUS+":on"))
+                togglePowerLed(true)
+              else
+                togglePowerLed(false)
+            }
+          }
+        }
+        xhttp.open('GET', request, true)
         xhttp.send()
       }
     </script>
