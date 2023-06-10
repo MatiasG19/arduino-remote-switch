@@ -5,7 +5,7 @@ html {
 
 body {
   background-color: #1f1e29;
-  color: aliceblue;
+  color: #cfcfcf;
   height: 95%;
 }
 
@@ -27,7 +27,7 @@ button {
   margin: 1vh 1vw 1vh 1vw;
   font-size: 10vh;
 
-  color: white;
+  color: #cfcfcf;
   background-color: #313131;
 }
 
@@ -36,11 +36,11 @@ button {
 }
 
 .activeButton:hover {
-  background-color: #c5c5c5;
+  background-color: #cfcfcf;
   color: black;
 }
 
 .activeButton:active {
   background-color: #494949;
-  color: white;
+  color: #cfcfcf;
 }
