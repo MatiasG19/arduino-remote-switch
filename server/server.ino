@@ -43,7 +43,7 @@ void setup() {
 
 void loop() {
   // Read inputs
-  if(digitalRead(IN_PIN_POWER_LED) > 0) 
+  if(digitalRead(IN_PIN_POWER_LED) == 0) 
     powerLed = true;
    else 
     powerLed = false;
@@ -57,7 +57,7 @@ void loop() {
     request = "";
     while (client.connected()) {
       if (client.available()) {
-        char reqChar = client.read();  // read 1 byte (character) from client
+        char reqChar = client.read();  // Read 1 byte (character) from client
 
         if(currentLineIsBlank == true)
           continue;
@@ -84,8 +84,8 @@ void loop() {
       }
     }
 
-    delay(1);      // give the web browser time to receive the data
-    client.stop(); // close the connection
+    delay(1);      // Give the web browser time to receive the data
+    client.stop(); 
   }
 
   // Control outputs
@@ -124,16 +124,18 @@ void sendResponse(String req, EthernetClient client) {
   } 
   // Other actions
   else {
-    if(req == "powerStatus")
-      client.write(powerLed);
-    else if(req == "powerOn" && !powerLed) 
-      powerOn = true;
-    else if(req == "standBy" && powerLed) 
-      standBy = true;
-    else if(req == "reset" && powerLed) 
-      reset = true;
-    else if(req == "kill" && powerLed) 
-      kill = true;
+    if(req == "powerStatus") {
+      if(powerLed) client.write("powerStatus:on");
+      else client.write("powerStatus:off");
+    }
+    else if(req == "powerOn") 
+      if (!powerLed) powerOn = true;
+    else if(req == "standBy") 
+      if (powerLed) standBy = true;
+    else if(req == "reset") 
+      if (powerLed) reset = true;
+    else if(req == "kill") 
+      if (powerLed) kill = true;
     else 
       client.println("HTTP/1.1 404 Not Found\n\r"); 
   }
