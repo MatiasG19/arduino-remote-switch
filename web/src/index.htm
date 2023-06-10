@@ -10,11 +10,11 @@
     <div class="heading">STORINATOR</div>
 
     <button
-      id="powerLed"
+      id="powerStatus"
       type="button"
       class="button"
       disabled
-      style="color: #b413ff"
+      style="height: 5%; font-size: 2vh; color: #b413ff"
     >
       NO CONNECTION
     </button>
@@ -122,17 +122,17 @@
         requestStatus(REQ_POWER_STATUS)
       }, 3000)
 
-      function togglePowerLedColor(state) {
-        const powerLed = document.getElementById('powerLed')
+      function togglePowerStatus(state) {
+        const powerStatus = document.getElementById('powerStatus')
         if (state == 'on') {
-          powerLed.textContent = 'POWER LED'
-          powerLed.style.color = '#27e670'
+          powerStatus.textContent = 'POWERED ON'
+          powerStatus.style.color = '#27e670'
         } else if (state == 'off') {
-          powerLed.textContent = 'POWER LED'
-          powerLed.style.color = '#eb1e8f'
+          powerStatus.textContent = 'POWERED OFF'
+          powerStatus.style.color = '#eb1e8f'
         } else {
-          powerLed.style.color = '#b413ff'
-          powerLed.textContent = 'NO CONNECTION'
+          powerStatus.style.color = '#b413ff'
+          powerStatus.textContent = 'NO CONNECTION'
         }
       }
 
@@ -160,16 +160,16 @@
               typeof this.response === 'string'
             ) {
               if (this.response.toString().includes(REQ_POWER_STATUS + ':on'))
-                togglePowerLedColor('on')
-              else togglePowerLedColor('off')
+                togglePowerStatus('on')
+              else togglePowerStatus('off')
             } else if (this.readyState == 4) {
-              togglePowerLedColor('nocon')
+              togglePowerStatus('nocon')
               console.log('No connection to server.')
             }
           }
         }
         xhttp.onerror = function () {
-          togglePowerLedColor('nocon')
+          togglePowerStatus('nocon')
           console.log('No connection to server.')
         }
         xhttp.open('GET', request, true)
