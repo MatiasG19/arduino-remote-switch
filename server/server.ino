@@ -5,12 +5,16 @@ byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED };
 IPAddress ip(192, 168, 0, 10);
 EthernetServer server(80);
 
-const int IN_PIN_POWER_LED = 6, IN_PIN_HDD_LED = 7;
-const int OUT_PIN_POWER = 9, OUT_PIN_RESET = 10;
+const int IN_PIN_POWER_LED = 7;
+const int OUT_PIN_POWER = 8, OUT_PIN_RESET = 9;
 
+// Commands
 bool powerOn;
 bool standBy;
 bool reset;
+bool kill;
+// States
+bool powerLed;
 
 void setup() {
   Serial.begin(9600);
@@ -19,7 +23,7 @@ void setup() {
   Serial.print("Server started at ");
   Serial.println(Ethernet.localIP());
 
-  // initialize SD card
+  // SD card
   Serial.println("Initializing SD card...");
   if (!SD.begin(4)) {
     Serial.println("ERROR - SD card initialization failed!");
@@ -34,13 +38,19 @@ void setup() {
   }
   Serial.println("SUCCESS - Found file.");
 
-  pinMode(IN_PIN_POWER_LED, INPUT);
-  pinMode(IN_PIN_HDD_LED, INPUT);
+  // PINs
+  pinMode(IN_PIN_POWER_LED, INPUT_PULLUP);
   pinMode(OUT_PIN_POWER, OUTPUT);
   pinMode(OUT_PIN_RESET, OUTPUT);
 }
 
 void loop() {
+  // Read inputs
+  if(digitalRead(IN_PIN_POWER_LED) > 0) 
+    powerLed = true;
+   else 
+    powerLed = false;
+
   // Server
   EthernetClient client = server.available();
   String request;
@@ -89,8 +99,11 @@ void loop() {
     controlOutput(OUT_PIN_POWER, 500);
     standBy = false;
   } else if(reset) {
-    controlOutput(OUT_PIN_RESET, 3000);
+    controlOutput(OUT_PIN_RESET, 500);
     reset = false;
+  } else if(kill) {
+    controlOutput(OUT_PIN_POWER, 4500);
+    kill = false;
   }
 }
 
@@ -112,18 +125,18 @@ void sendResponse(String req, EthernetClient client) {
     webFile.close();
   } 
   else {
-    if(req == "powerOn" && !digitalRead(IN_PIN_POWER_LED)) {
+    if(req == "powerStatus")
+      client.write(powerLed);
+    else if(req == "powerOn" && !powerLed) 
       powerOn = true;
-    }
-    else if(req == "standBy" && digitalRead(IN_PIN_POWER_LED)) {
+    else if(req == "standBy" && powerLed) 
       standBy = true;
-    }
-    else if(req == "reset") {
+    else if(req == "reset" && powerLed) 
       reset = true;
-    }
-    else {
+    else if(req == "kill" && powerLed) 
+      kill = true;
+    else 
       client.println("HTTP/1.1 404 Not Found\n\r"); 
-    }
   }
 }
 
