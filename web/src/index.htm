@@ -9,7 +9,13 @@
   <body>
     <div class="heading">STORINATOR</div>
 
-    <button id="powerLed" type="button" class="button" disabled>
+    <button
+      id="powerLed"
+      type="button"
+      class="button"
+      disabled
+      style="color: #b413ff"
+    >
       NO CONNECTION
     </button>
     <button
@@ -69,7 +75,7 @@
           powerLed.textContent = 'POWER LED'
           powerLed.style.color = '#eb1e8f'
         } else {
-          powerLed.style.color = '#cfcfcf'
+          powerLed.style.color = '#b413ff'
           powerLed.textContent = 'NO CONNECTION'
         }
       }
@@ -100,11 +106,15 @@
               if (this.response.toString().includes(REQ_POWER_STATUS + ':on'))
                 togglePowerLedColor('on')
               else togglePowerLedColor('off')
+            } else if (this.readyState == 4) {
+              togglePowerLedColor('nocon')
+              console.log('No connection to server.')
             }
-          } else if (this.readyState == 4 && this.status == 404) {
-            togglePowerLedColor('nocon')
-            console.log('No connection to server.')
           }
+        }
+        xhttp.onerror = function () {
+          togglePowerLedColor('nocon')
+          console.log('No connection to server.')
         }
         xhttp.open('GET', request, true)
         xhttp.send()
