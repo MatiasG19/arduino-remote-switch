@@ -9,10 +9,7 @@ const int IN_PIN_POWER_LED = 7;
 const int OUT_PIN_POWER = 8, OUT_PIN_RESET = 9;
 
 // Commands
-bool powerOn;
-bool standBy;
-bool reset;
-bool kill;
+bool powerOn, standBy, reset, kill;
 // States
 bool powerLed;
 
@@ -117,13 +114,15 @@ void sendResponse(String req, EthernetClient client) {
   else 
     client.println("\n\r\n\r");
 
+  // Send file to client
   File webFile = SD.open(req);
   if (webFile) {
     while (webFile.available()) {
-      client.write(webFile.read());  // send web page to client
+      client.write(webFile.read());  
     }
     webFile.close();
   } 
+  // Other actions
   else {
     if(req == "powerStatus")
       client.write(powerLed);
