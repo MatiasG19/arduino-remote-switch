@@ -1,16 +1,21 @@
 # Build instructions
 
 > **Disclaimer:** Follow these instruction at your own risk.
+>
+> Also check your motherboard's manual for the available headers, since these might differ.
 
 ## Soldering and board installation
 
+![Schematic](./Assets/schematic.png)
+
 1. Cut PCB to the right size if neccessary.
 2. Drill two mounting holes into PCB to fit the board at the end of the case.
-3. Solder the componentes onto PCB (daugtherboard):
-   // TODO schematic
+3. Solder the componentes onto PCB (daughterboard).
 4. Screw Arduino with shield and spacers into case (saw spacers to the right length in neccessary).
-5. Install daugther board.
-6. Wire daugtherboard to Arduino.
+5. Install daughterboard.
+6. Wire daughterboard to Arduino.
+
+![Daughterboard](./Assets/daughterboard.png)
 
 ## Installing software
 
@@ -28,8 +33,7 @@
 
 1. Turn off Arduino and PC and detach from power.
 2. Install USB internal header on the PC's motherboard. See your motherboard manual for a free USB header.
-3. Wire cables between your PC and Arduino like following and close the case:
-   // TODO Picture wiring of schematic
+3. Wire cables between your PC and Arduino like following and close the case.
 4. Connect Arduino to the USB header.
 5. Connect the shield to ethernet to router.
 6. Restore power to PC again. Arduino should turn on.
