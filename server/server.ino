@@ -16,7 +16,13 @@ bool powerOn, standBy, reset, kill;
 bool powerLed;
 
 void setup() {
+  // PINs and serial
+  pinMode(IN_PIN_POWER_LED, INPUT_PULLUP);
+  pinMode(OUT_PIN_POWER, OUTPUT);
+  pinMode(OUT_PIN_RESET, OUTPUT);
   Serial.begin(9600);
+
+  // Server
   Ethernet.begin(mac, ip);
   server.begin();
   Serial.print("Server started at ");
@@ -37,11 +43,6 @@ void setup() {
     return;
   }
   Serial.println("SUCCESS - Found file.");
-
-  // PINs
-  pinMode(IN_PIN_POWER_LED, INPUT_PULLUP);
-  pinMode(OUT_PIN_POWER, OUTPUT);
-  pinMode(OUT_PIN_RESET, OUTPUT);
 }
 
 void loop() {
@@ -104,7 +105,8 @@ void loop() {
     controlOutput(OUT_PIN_RESET, 500);
     reset = false;
   } else if(kill) {
-    controlOutput(OUT_PIN_POWER, 4500);
+    Serial.println("kill");
+    controlOutput(OUT_PIN_POWER, 5000);
     kill = false;
   }
 }
@@ -113,34 +115,37 @@ void sendResponse(String req, EthernetClient client) {
   client.println("HTTP/1.1 200 OK");
   if(req == "") req = "index.htm";
 
+  // Send file to client
   if(req.endsWith(".htm")) {
     client.println("Content-Type: text/html\n\r\n\r");
+    File webFile = SD.open(req);
+    if (webFile) {
+      while (webFile.available()) {
+        client.write(webFile.read());  
+      }
+      webFile.close();
+    } 
   }
-  else 
-    client.println("\n\r\n\r");
-
-  // Send file to client
-  File webFile = SD.open(req);
-  if (webFile) {
-    while (webFile.available()) {
-      client.write(webFile.read());  
-    }
-    webFile.close();
-  } 
   // Other actions
   else {
+    Serial.println("Other");
+    client.println("\n\r\n\r");
     if(req == "powerStatus") {
       if(powerLed) client.write("powerStatus:on");
       else client.write("powerStatus:off");
     }
-    else if(req == "powerOn") 
+    else if(req == "powerOn") {
       if (!powerLed) powerOn = true;
-    else if(req == "standBy") 
+    }
+    else if(req == "standBy") {
       if (powerLed) standBy = true;
-    else if(req == "reset") 
+    }
+    else if(req == "reset") {
       if (powerLed) reset = true;
-    else if(req == "kill") 
+    }
+    else if(req == "kill") {
       if (powerLed) kill = true;
+    }
     else 
       client.println("HTTP/1.1 404 Not Found\n\r"); 
   }
