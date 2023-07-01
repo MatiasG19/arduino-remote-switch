@@ -1,32 +1,11 @@
 # Arduino Remote Switch
 
-Remote switch to turn on, off or reset PC.
+Remote switch to turn on, off, reset or kill PC via a web interface.
+
+This project is based on a Arduino with a ethernet shield and a small daugtherboard to connect to PC headers by decoupling the two circuits with optocouplers. The power for the Arduino is sourced from the PC's motherboard USB header. The switch interface is hosted on the ethernet shield as a website and can be accessed from anywhere on the network via a webbrowser.
 
 ![Web interface](./web.png)
 
 ## Getting started
 
-### Hardware
-
-- Arduino Uno
-- Arduino Ethernet Shield
-- Ethernet cable
-- Micro SD card
-- Wires
-  // TODO how many wires?
-
-### Software
-
-- Arduino IDE
-
-### Steps
-
-> **Disclaimer:** Follow these instruction at your own risk.
-
-1. Format SD card to FAT16.
-2. Store website (content of `web/src/`) on SD card.
-3. Put SD card into ethernet shield.
-4. Upload server program `server.ino` to Arduino via Arduino IDE.
-5. Turn off Arduino and PC and detach from power.
-6. Wire cables between your PC and Arduino like following:
-   TODO Picture wiring of schematic
+Check [what is needed](./docs/ToolsAndMaterials.md) and follow the [build instructions](./docs/BuildInstructions.md) to build this project.
