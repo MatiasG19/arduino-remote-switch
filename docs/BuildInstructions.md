@@ -39,3 +39,5 @@
 6. Restore power to PC again. Arduino should turn on.
 7. Open webbrowser on phone to open the website and turn on PC by pressing the power on button.
 8. PC should start.
+
+![Front panel IO](./Assets/frontpanelIO.png)
