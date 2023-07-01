@@ -1,13 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>STORINATOR Switch</title>
-    <!-- TODO icon -->
-    <link rel="icon" type="image/png" href="power.png" />
-    <link rel="stylesheet" href="style.css" />
+    <title>PC Switch</title>
+    <link rel="icon" type="image/png" href="favicon.png" />
   </head>
   <body>
-    <div class="heading">STORINATOR</div>
+    <div class="heading">PC SWITCH</div>
 
     <button id="powerStatus" type="button" class="statusButton" disabled>
       NO CONNECTION
@@ -52,7 +50,7 @@
     <style>
       html {
         height: 95%;
-        font-family: 'Lucida Console', 'Arial', monospace;
+        font-family: 'Tahoma', 'Arial', monospace;
       }
 
       body {
@@ -68,10 +66,8 @@
 
       button {
         position: relative;
-        display: inline-block;
         width: calc(100% - 2vw);
         min-width: 50px;
-        max-width: 200vh;
         height: 15%;
         min-height: 50px;
         border: none;
@@ -80,6 +76,7 @@
         font-size: 5vh;
         color: #cfcfcf;
         background-color: #313131;
+        font-family: 'Tahoma', 'Arial', monospace;
       }
 
       .statusButton {
@@ -156,11 +153,11 @@
         var xhttp = new XMLHttpRequest()
         xhttp.onreadystatechange = function () {
           if (this.readyState == 4 && this.status == 200) {
-            console.debug(`sendCommand:${request}:${this.responseText}`)
+            console.debug(`sendCommand:${type}:${this.responseText}`)
             alert('Action confirmed.')
           }
         }
-        xhttp.open('GET', request, true)
+        xhttp.open('GET', type, true)
         xhttp.send()
       }
 
