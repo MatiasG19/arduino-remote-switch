@@ -127,7 +127,6 @@ void sendResponse(String req, EthernetClient client) {
   }
   // Other actions
   else {
-    Serial.println("Other");
     client.println("\n\r\n\r");
     if(req == "powerStatus") {
       if(powerLed) client.write("powerStatus:on");
