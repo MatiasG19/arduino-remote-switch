@@ -1,4 +1,4 @@
-# Arduino Remote Switch
+# Arduino Remote Switch [![ci](https://github.com/MatiasG19/arduino-remote-switch/actions/workflows/ci.yml/badge.svg)](https://github.com/MatiasG19/arduino-remote-switch/actions/workflows/ci.yml)
 
 Remote switch to turn on, off, reset or kill PC via a web interface.
 

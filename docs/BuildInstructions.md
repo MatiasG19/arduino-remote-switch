@@ -24,8 +24,8 @@
 3. Put SD card into ethernet shield.
 4. Connect Arduino to a powerd on PC via USB and the shield to a router via ethernet.
 5. Open router configuration, set a static IP range and choose a free IP address.
-6. Set the IP address in the `server.ino` file and save.
-7. Open Arduino IDE and upload `server.ino` to Arduino.
+6. Set the IP address in the `src.ino` file and save.
+7. Open Arduino IDE and upload `src.ino` to Arduino.
 8. Test if the website can be reached by typing the IP into the webbrowser.
 9. Unplug all the cables from the Arduino for the next steps.
 

@@ -1,0 +1,88 @@
+name: ci
+
+on: [push, pull_request]
+
+env:
+  SERVER_PATH: server/src/
+  WEB_PATH: web/
+
+jobs:
+  Server-Compile:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        fqbn:
+          - arduino:avr:uno
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Arduino CLI
+        uses: arduino/compile-sketches@v1
+        with:
+          fqbn: ${{ matrix.fqbn }}
+          libraries: |
+            - name: Ethernet
+            - name: SD
+          sketch-paths: |
+            - ${{ env.SERVER_PATH }}
+
+  Server-Format-Check:
+    needs: [Server-Compile]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Setup Clang Formatter
+        uses: actions/checkout@v3
+        with:
+          repository: adafruit/ci-arduino
+          path: ci
+
+      - name: Check correct code formatting with clang-format
+        run: python3 ci/run-clang-format.py -e "ci/*" -e "bin/*" --extensions "ino" -r ${{ env.SERVER_PATH }}
+
+  Web-Format-Check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "YARN_CACHE_DIR_PATH=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+      - name: Cache yarn dependencies
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: |
+            ${{ steps.yarn-cache-dir-path.outputs.YARN_CACHE_DIR_PATH }}
+            **/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependecies
+        working-directory: ${{ env.WEB_PATH }}
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn --frozen-lockfile
+
+      - name: Check format
+        working-directory: ${{ env.WEB_PATH }}
+        run: yarn check-format
