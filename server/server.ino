@@ -128,24 +128,26 @@ void sendResponse(String request, EthernetClient client) {
   // Other actions
   else {
     client.println("\n\r\n\r");
-    if(request == "powerStatus") {
-      if(powerLed) client.write("powerStatus:on");
-      else client.write("powerStatus:off");
+    switch(request) {
+      case "powerStatus":
+        if(powerLed) client.write("powerStatus:on");
+        else client.write("powerStatus:off");
+        break;
+      case "powerOn":
+        if (!powerLed) powerOn = true;
+        break;
+      case "standBy":
+        if (powerLed) standBy = true;
+        break;
+      case "reset":
+        if (powerLed) reset = true;
+        break;
+      case "kill":
+        if (powerLed) kill = true;
+        break;
+      default:
+        client.println("HTTP/1.1 404 Not Found\n\r"); 
     }
-    else if(request == "powerOn") {
-      if (!powerLed) powerOn = true;
-    }
-    else if(request == "standBy") {
-      if (powerLed) standBy = true;
-    }
-    else if(request == "reset") {
-      if (powerLed) reset = true;
-    }
-    else if(request == "kill") {
-      if (powerLed) kill = true;
-    }
-    else 
-      client.println("HTTP/1.1 404 Not Found\n\r"); 
   }
 }
 
