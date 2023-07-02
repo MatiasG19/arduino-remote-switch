@@ -111,13 +111,13 @@ void loop() {
   }
 }
 
-void sendResponse(String req, EthernetClient client) {
+void sendResponse(String request, EthernetClient client) {
   client.println("HTTP/1.1 200 OK");
 
   // Send file to client
-  if(req == "") {
+  if(request == "") {
     client.println("Content-Type: text/html\n\r\n\r");
-    File webFile = SD.open(req);
+    File webFile = SD.open(request);
     if (webFile) {
       while (webFile.available()) {
         client.write(webFile.read());  
@@ -128,20 +128,20 @@ void sendResponse(String req, EthernetClient client) {
   // Other actions
   else {
     client.println("\n\r\n\r");
-    if(req == "powerStatus") {
+    if(request == "powerStatus") {
       if(powerLed) client.write("powerStatus:on");
       else client.write("powerStatus:off");
     }
-    else if(req == "powerOn") {
+    else if(request == "powerOn") {
       if (!powerLed) powerOn = true;
     }
-    else if(req == "standBy") {
+    else if(request == "standBy") {
       if (powerLed) standBy = true;
     }
-    else if(req == "reset") {
+    else if(request == "reset") {
       if (powerLed) reset = true;
     }
-    else if(req == "kill") {
+    else if(request == "kill") {
       if (powerLed) kill = true;
     }
     else 
