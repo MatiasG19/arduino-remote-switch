@@ -52,33 +52,36 @@ jobs:
         run: python3 ci/run-clang-format.py -e "ci/*" -e "bin/*" --extensions "ino" -r ${{ env.SERVER_PATH }}
 
   Web-Format-Check:
-    - name: Checkout
-      uses: actions/checkout@v3
+    runs-on: ubuntu-latest
 
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
 
-    - name: Get yarn cache directory path
-      id: yarn-cache
-      run: echo "YARN_CACHE_DIR_PATH=$(yarn cache dir)" >> $GITHUB_OUTPUT
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
 
-    - name: Cache yarn dependencies
-      uses: actions/cache@v3
-      id: yarn-cache
-      with:
-        path: |
-          ${{ steps.yarn-cache.outputs.YARN_CACHE_DIR_PATH }}
-          **/node_modules
-        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-yarn-
+      - name: Get yarn cache directory path
+        id: yarn-cache
+        run: echo "YARN_CACHE_DIR_PATH=$(yarn cache dir)" >> $GITHUB_OUTPUT
 
-    - name: Install dependecies
-      if: steps.yarn-cache.outputs.cache-hit != 'true'
-      run: yarn --frozen-lockfile
+      - name: Cache yarn dependencies
+        uses: actions/cache@v3
+        id: yarn-cache
+        with:
+          path: |
+            ${{ steps.yarn-cache.outputs.YARN_CACHE_DIR_PATH }}
+            **/node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
 
-    - name: Check format
-      working-directory: ${{ env.WEB_PATH }}
-      run: yarn format-check
+      - name: Install dependecies
+        if: steps.yarn-cache.outputs.cache-hit != 'true'
+        run: yarn --frozen-lockfile
+
+      - name: Check format
+        working-directory: ${{ env.WEB_PATH }}
+        run: yarn format-check
