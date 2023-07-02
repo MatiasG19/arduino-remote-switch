@@ -151,3 +151,5 @@ void controlOutput(int output, int delayTime) {
   digitalWrite(output, HIGH);
   delay(delayTime);
   digitalWrite(output, LOW);
+  delay(3000);
+}
