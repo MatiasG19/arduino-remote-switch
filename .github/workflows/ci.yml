@@ -84,4 +84,4 @@ jobs:
 
       - name: Check format
         working-directory: ${{ env.WEB_PATH }}
-        run: yarn format-check
+        run: yarn check-format
