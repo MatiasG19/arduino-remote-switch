@@ -6,29 +6,7 @@ env:
   SERVER_PATH: server/src/
 
 jobs:
-  Arduino-Format-Check:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.x'
-      - name: Setup Clang Formatter
-        uses: actions/checkout@v3
-        with:
-          repository: adafruit/ci-arduino
-          path: ci
-
-      - name: Check correct code formatting with clang-format
-        run: python3 ci/run-clang-format.py -e "ci/*" -e "bin/*" --extensions "ino" -r ${{ env.SERVER_PATH }}
-
   Arduino-Compile:
-    needs: [Arduino-Format-Check]
-
     runs-on: ubuntu-latest
 
     strategy:
@@ -48,3 +26,25 @@ jobs:
             - name: SD
           sketch-paths: |
             - ${{ env.SERVER_PATH }}
+
+  Arduino-Format-Check:
+    needs: [Arduino-Compile]
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+      - name: Setup Clang Formatter
+        uses: actions/checkout@v3
+        with:
+          repository: adafruit/ci-arduino
+          path: ci
+
+      - name: Check correct code formatting with clang-format
+        run: python3 ci/run-clang-format.py -e "ci/*" -e "bin/*" --extensions "ino" -r ${{ env.SERVER_PATH }}
