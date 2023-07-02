@@ -4,7 +4,7 @@ on: [push, pull_request]
 
 env:
   SERVER_PATH: server/src/
-  WEB_PATH: web/src/
+  WEB_PATH: web/
 
 jobs:
   Server-Compile:
