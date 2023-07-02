@@ -113,10 +113,9 @@ void loop() {
 
 void sendResponse(String req, EthernetClient client) {
   client.println("HTTP/1.1 200 OK");
-  if(req == "") req = "index.htm";
 
   // Send file to client
-  if(req.endsWith(".htm")) {
+  if(req == "") {
     client.println("Content-Type: text/html\n\r\n\r");
     File webFile = SD.open(req);
     if (webFile) {
