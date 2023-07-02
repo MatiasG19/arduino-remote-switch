@@ -125,32 +125,25 @@ void sendResponse(String request, EthernetClient client) {
   // Button actions and status request
   else {
     client.println("\n\r\n\r");
-    switch (request) {
-    case "powerStatus":
+    if (req == "powerStatus") {
       if (powerLed)
         client.write("powerStatus:on");
       else
         client.write("powerStatus:off");
-      break;
-    case "powerOn":
+    } else if (req == "powerOn") {
       if (!powerLed)
         powerOn = true;
-      break;
-    case "standBy":
+    } else if (req == "standBy") {
       if (powerLed)
         standBy = true;
-      break;
-    case "reset":
+    } else if (req == "reset") {
       if (powerLed)
         reset = true;
-      break;
-    case "kill":
+    } else if (req == "kill") {
       if (powerLed)
         kill = true;
-      break;
-    default:
+    } else
       client.println("HTTP/1.1 404 Not Found\n\r");
-    }
   }
 }
 
@@ -158,5 +151,3 @@ void controlOutput(int output, int delayTime) {
   digitalWrite(output, HIGH);
   delay(delayTime);
   digitalWrite(output, LOW);
-  delay(3000);
-}
