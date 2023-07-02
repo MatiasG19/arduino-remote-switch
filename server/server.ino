@@ -111,14 +111,13 @@ void loop() {
   }
 }
 
-void sendResponse(String req, EthernetClient client) {
+void sendResponse(String request, EthernetClient client) {
   client.println("HTTP/1.1 200 OK");
-  if(req == "") req = "index.htm";
 
   // Send file to client
-  if(req.endsWith(".htm")) {
+  if(request == "") {
     client.println("Content-Type: text/html\n\r\n\r");
-    File webFile = SD.open(req);
+    File webFile = SD.open(request);
     if (webFile) {
       while (webFile.available()) {
         client.write(webFile.read());  
@@ -126,28 +125,29 @@ void sendResponse(String req, EthernetClient client) {
       webFile.close();
     } 
   }
-  // Other actions
+  // Button actions and status request
   else {
-    Serial.println("Other");
     client.println("\n\r\n\r");
-    if(req == "powerStatus") {
-      if(powerLed) client.write("powerStatus:on");
-      else client.write("powerStatus:off");
+    switch(request) {
+      case "powerStatus":
+        if(powerLed) client.write("powerStatus:on");
+        else client.write("powerStatus:off");
+        break;
+      case "powerOn":
+        if (!powerLed) powerOn = true;
+        break;
+      case "standBy":
+        if (powerLed) standBy = true;
+        break;
+      case "reset":
+        if (powerLed) reset = true;
+        break;
+      case "kill":
+        if (powerLed) kill = true;
+        break;
+      default:
+        client.println("HTTP/1.1 404 Not Found\n\r"); 
     }
-    else if(req == "powerOn") {
-      if (!powerLed) powerOn = true;
-    }
-    else if(req == "standBy") {
-      if (powerLed) standBy = true;
-    }
-    else if(req == "reset") {
-      if (powerLed) reset = true;
-    }
-    else if(req == "kill") {
-      if (powerLed) kill = true;
-    }
-    else 
-      client.println("HTTP/1.1 404 Not Found\n\r"); 
   }
 }
 
