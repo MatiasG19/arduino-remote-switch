@@ -1,0 +1,15 @@
+{
+  "name": "arduino-remote-switch",
+  "version": "1.0.0",
+  "main": "index.htm",
+  "repository": "https://github.com/MatiasG19/arduino-remote-switch",
+  "author": "Matiasg19",
+  "license": "GNU GPL V3",
+  "private": true,
+  "scripts": {
+    "check-format": "yarn prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "2.8.8"
+  }
+}
