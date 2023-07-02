@@ -3,7 +3,7 @@ name: ci
 on: [push, pull_request]
 
 env:
-  SERVER_PATH: ./server/src
+  SERVER_PATH: server/src/
 
 jobs:
   Arduino-Format-Check:
@@ -29,37 +29,22 @@ jobs:
   Arduino-Compile:
     needs: [Arduino-Format-Check]
 
-    strategy:
-      matrix:
-        # The matrix will produce one job for each configuration
-        # parameter of type `arduino-platform`
-        arduino-platform: ['arduino:avr']
-        # This is usually optional but we need to statically define the
-        # FQBN of the boards we want to test for each platform. In the
-        # future the CLI might automatically detect and download the core
-        # needed to compile against a certain FQBN, at that point the
-        # following `include` section will be useless.
-        include:
-          # This works like this: when the platform is "arduino:samd", the
-          # variable `fqbn` is set to "arduino:samd:nano_33_iot".
-          - arduino-platform: 'arduino:avr'
-            fqbn: 'arduino:avr:uno'
-
     runs-on: windows-latest
 
+    strategy:
+      matrix:
+        fqbn:
+          - arduino:avr:uno
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
       - name: Setup Arduino CLI
-        uses: arduino/setup-arduino-cli@v1
-
-      - name: Install platform
-        run: |
-          arduino-cli core update-index
-          arduino-cli core install ${{ matrix.arduino-platform }}
-
-      # Compile sketch, using the FQBN that was set
-      # in the build matrix.
-      - name: Compile Sketch
-        run: arduino-cli compile --fqbn ${{ matrix.fqbn }} ${{ env.SERVER_PATH }}
+      - uses: arduino/compile-sketches@v1
+        with:
+          fqbn: ${{ matrix.fqbn }}
+          libraries: |
+            - name: Ethernet
+            - name: SD
+          sketch-paths: |
+            - ${{ env.SERVER_PATH }}
