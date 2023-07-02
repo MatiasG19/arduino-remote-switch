@@ -3,7 +3,7 @@ name: ci
 on: [push, pull_request]
 
 env:
-  SERVER_PATH: ./server/src/
+  SERVER_PATH: ./server/src
 
 jobs:
   Arduino-Format-Check:
