@@ -18,7 +18,7 @@ jobs:
           path: ci
 
       - name: Check correct code formatting with clang-format
-        run: python3 ci/run-clang-format.py -e "ci/*" -e "bin/*" --extensions "ino" -r ../server
+        run: python3 ci/run-clang-format.py -e "ci/*" -e "bin/*" --extensions "ino" -r server/
 
   Arduino-Compile:
     needs: [Arduino-Format-Check]
