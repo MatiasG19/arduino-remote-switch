@@ -1,4 +1,4 @@
-# Arduino Remote Switch
+# Arduino Remote Switch [![ci][ci-img]][ci-url]
 
 Remote switch to turn on, off, reset or kill PC via a web interface.
 
