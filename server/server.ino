@@ -125,7 +125,7 @@ void sendResponse(String request, EthernetClient client) {
       webFile.close();
     } 
   }
-  // Other actions
+  // Button actions
   else {
     client.println("\n\r\n\r");
     switch(request) {
