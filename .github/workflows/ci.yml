@@ -2,6 +2,9 @@ name: ci
 
 on: [push, pull_request]
 
+env:
+  SERVER_PATH: server/src/
+
 jobs:
   Arduino-Format-Check:
     runs-on: ubuntu-latest
@@ -21,7 +24,7 @@ jobs:
           path: ci
 
       - name: Check correct code formatting with clang-format
-        run: python3 ci/run-clang-format.py -e "ci/*" -e "bin/*" --extensions "ino" -r server/
+        run: python3 ci/run-clang-format.py -e "ci/*" -e "bin/*" --extensions "ino" -r ${{ env.SERVER_PATH }}
 
   Arduino-Compile:
     needs: [Arduino-Format-Check]
@@ -59,4 +62,4 @@ jobs:
       # Compile sketch, using the FQBN that was set
       # in the build matrix.
       - name: Compile Sketch
-        run: arduino-cli compile --fqbn ${{ matrix.fqbn }} ./server
+        run: arduino-cli compile --fqbn ${{ matrix.fqbn }} ${{ env.SERVER_PATH }}
