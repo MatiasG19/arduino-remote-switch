@@ -4,9 +4,10 @@ on: [push, pull_request]
 
 env:
   SERVER_PATH: server/src/
+  WEB_PATH: web/src/
 
 jobs:
-  Arduino-Compile:
+  Server-Compile:
     runs-on: ubuntu-latest
 
     strategy:
@@ -27,7 +28,7 @@ jobs:
           sketch-paths: |
             - ${{ env.SERVER_PATH }}
 
-  Arduino-Format-Check:
+  Server-Format-Check:
     needs: [Arduino-Compile]
 
     runs-on: ubuntu-latest
@@ -40,6 +41,7 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.x'
+
       - name: Setup Clang Formatter
         uses: actions/checkout@v3
         with:
@@ -48,3 +50,35 @@ jobs:
 
       - name: Check correct code formatting with clang-format
         run: python3 ci/run-clang-format.py -e "ci/*" -e "bin/*" --extensions "ino" -r ${{ env.SERVER_PATH }}
+
+  Web-Format-Check:
+    - name: Checkout
+      uses: actions/checkout@v3
+
+    - name: Use Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}
+
+    - name: Get yarn cache directory path
+      id: yarn-cache
+      run: echo "YARN_CACHE_DIR_PATH=$(yarn cache dir)" >> $GITHUB_OUTPUT
+
+    - name: Cache yarn dependencies
+      uses: actions/cache@v3
+      id: yarn-cache
+      with:
+        path: |
+          ${{ steps.yarn-cache.outputs.YARN_CACHE_DIR_PATH }}
+          **/node_modules
+        key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-yarn-
+
+    - name: Install dependecies
+      if: steps.yarn-cache.outputs.cache-hit != 'true'
+      run: yarn --frozen-lockfile
+
+    - name: Check format
+      working-directory: ${{ env.WEB_PATH }}
+      run: yarn format-check
