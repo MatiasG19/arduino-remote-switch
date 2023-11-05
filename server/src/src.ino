@@ -2,7 +2,7 @@
 #include <SD.h>
 
 byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
-IPAddress ip(192, 168, 178, 10);
+IPAddress ip(192, 168, 0, 10);
 EthernetServer server(80);
 long delayStart;
 
