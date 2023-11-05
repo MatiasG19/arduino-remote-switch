@@ -2,7 +2,7 @@
 #include <SD.h>
 
 byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
-IPAddress ip(192, 168, 0, 10);
+IPAddress ip(192, 168, 178, 10);
 EthernetServer server(80);
 long delayStart;
 
@@ -113,6 +113,7 @@ void sendResponse(String request, EthernetClient client) {
 
   // Send file to client
   if (request == "") {
+    request = "index.htm";
     client.println("Content-Type: text/html\n\r\n\r");
     File webFile = SD.open(request);
     if (webFile) {
