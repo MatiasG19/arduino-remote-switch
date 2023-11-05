@@ -113,6 +113,7 @@ void sendResponse(String request, EthernetClient client) {
 
   // Send file to client
   if (request == "") {
+    request = "index.htm";
     client.println("Content-Type: text/html\n\r\n\r");
     File webFile = SD.open(request);
     if (webFile) {
