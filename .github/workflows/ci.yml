@@ -1,6 +1,6 @@
 name: ci
 
-on: [push, pull_request]
+on: [push]
 
 env:
   SERVER_PATH: server/src/
