@@ -10,7 +10,7 @@
     "check-format": "npx prettier --check ./src"
   },
   "devDependencies": {
-    "prettier": "2.8.8"
+    "prettier": "3.5.3"
   },
   "engines": {
     "node": "^20",
