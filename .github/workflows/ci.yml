@@ -15,7 +15,7 @@ jobs:
           - arduino:avr:uno
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Arduino CLI
         uses: arduino/compile-sketches@v1
@@ -32,7 +32,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -40,7 +40,7 @@ jobs:
           python-version: "3.x"
 
       - name: Setup Clang Formatter
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           repository: adafruit/ci-arduino
           path: ci
@@ -52,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup Node
         uses: actions/setup-node@v4
