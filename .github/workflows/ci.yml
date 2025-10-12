@@ -66,3 +66,27 @@ jobs:
       - name: Check format
         working-directory: ${{ env.WEB_PATH }}
         run: npm run format:check
+
+  Docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Docker build
+        run: docker build -t remote-switch .
+
+      - name: Run container
+        run: |
+          docker run --rm -d \
+          -p 80:80 \
+          --name remote-switch remote-switch
+
+      - name: Wait for container to start
+        run: sleep 5
+
+      - name: Ping
+        run: curl -f http://localhost:80
+
+      - name: Stop container
+        run: docker stop remote-switch
