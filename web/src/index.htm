@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html>
   <head>
     <title>PC Switch</title>
@@ -120,6 +120,9 @@
     </style>
 
     <script>
+      const REQUEST_TYPE = 'XMLHttp' // Options: 'XMLHttp' | 'fetch'
+      const URL = 'http://192.168.0.10' // Edit when using request type 'fetch'
+
       const CMD_POWER_ON = 'powerOn',
         CMD_STAND_BY = 'standBy',
         CMD_RESET = 'reset',
@@ -161,22 +164,23 @@
         xhttp.send()
       }
 
-      function requestStatus(request) {
+      function handleResponse(request, response) {
+        if (request == REQ_POWER_STATUS && typeof response === 'string') {
+          if (this.response.toString().includes(REQ_POWER_STATUS + ':on'))
+            togglePowerStatus('on')
+          else togglePowerStatus('off')
+        } else if (this.readyState == 4) {
+          togglePowerStatus('nocon')
+          console.log('No connection to server.')
+        }
+      }
+
+      function requestStatusXMLHttp(request) {
         var xhttp = new XMLHttpRequest()
         xhttp.onreadystatechange = function () {
           if (this.readyState == 4 && this.status == 200) {
             console.debug(`requestStatus:${request}:${this.responseText}`)
-            if (
-              request == REQ_POWER_STATUS &&
-              typeof this.response === 'string'
-            ) {
-              if (this.response.toString().includes(REQ_POWER_STATUS + ':on'))
-                togglePowerStatus('on')
-              else togglePowerStatus('off')
-            } else if (this.readyState == 4) {
-              togglePowerStatus('nocon')
-              console.log('No connection to server.')
-            }
+            handleResponse(request, response)
           }
         }
         xhttp.onerror = function () {
@@ -185,6 +189,35 @@
         }
         xhttp.open('GET', request, true)
         xhttp.send()
+      }
+
+      async function requestStatusFetch(request) {
+        try {
+          const response = await fetch(`${url}/${request}`)
+          if (!response.ok)
+            console.error(
+              `Request ${request} failed with response: ${response}`
+            )
+
+          const result = await response.json()
+          handleResponse(request, response)
+          console.log(result)
+        } catch (error) {
+          console.error(`Request ${request} failed`)
+        }
+      }
+
+      async function requestStatus(request) {
+        switch (REQUEST_TYPE) {
+          case 'XMLHttp':
+            requestStatusXMLHttp(request)
+            break
+          case 'fetch':
+            await requestStatusFetch(status)
+            break
+          default:
+            console.error('Request type not implemented!')
+        }
       }
     </script>
   </body>
