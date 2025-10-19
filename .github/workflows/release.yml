@@ -1,0 +1,43 @@
+name: Release
+
+on:
+  release:
+    types: [released, prereleased]
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    needs: release
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build and push Docker image (latest)
+        uses: docker/build-push-action@v6
+        if: ${{ !github.event.release.prerelease }}
+        with:
+          context: ./web
+          push: true
+          tags: |
+            ghcr.io/matiasg19/arduino-remote-switch:latest
+            ghcr.io/matiasg19/arduino-remote-switch:${{ github.ref_name }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
+
+      - name: Build and push Docker image (prerelease)
+        uses: docker/build-push-action@v6
+        if: ${{ github.event.release.prerelease }}
+        with:
+          context: ./web
+          push: true
+          tags: |
+            ghcr.io/matiasg19/arduino-remote-switch:pre
+            ghcr.io/matiasg19/arduino-remote-switch:${{ github.ref_name }}
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
