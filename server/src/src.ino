@@ -130,7 +130,7 @@ void sendResponse(String request, EthernetClient client) {
 
   // Send file to client
   if (request == "") {
-    #ifdef WEBSITE_ON_SD_CARD
+#ifdef WEBSITE_ON_SD_CARD
     request = "index.htm";
     client.println("Content-Type: text/html\n\r\n\r");
     File webFile = SD.open(request);
@@ -140,10 +140,10 @@ void sendResponse(String request, EthernetClient client) {
       }
       webFile.close();
     }
-    #endif
-    #ifdef WEBSITE_ON_EXTERNAL_WEBSERVER
+#endif
+#ifdef WEBSITE_ON_EXTERNAL_WEBSERVER
     client.println("HTTP/1.1 404 Not Found\n\r");
-    #endif
+#endif
   }
   // Button actions and status request
   else {
