@@ -158,7 +158,7 @@
             alert('Action confirmed.')
           }
         }
-        xhttp.open('GET', `${URL}${type}`, true)
+        xhttp.open('GET', `${URL}/${type}`, true)
         xhttp.send()
       }
 
@@ -184,7 +184,7 @@
           togglePowerStatus('nocon')
           console.log('No connection to server.')
         }
-        xhttp.open('GET', `${URL}${request}`, true)
+        xhttp.open('GET', `${URL}/${request}`, true)
         xhttp.send()
       }
     </script>
