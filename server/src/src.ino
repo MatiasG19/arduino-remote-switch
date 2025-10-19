@@ -1,5 +1,5 @@
-//#define WEBSITE_ON_SD_CARD // Comment out this line when using external 
-//  webserver
+// #define WEBSITE_ON_SD_CARD // Comment out this line when using external 
+// webserver
 #define WEBSITE_ON_EXTERNAL_WEBSERVER // Comment this line out the using SD 
                                       // card
 
