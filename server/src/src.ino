@@ -1,5 +1,5 @@
 //#define WEBSITE_ON_SD_CARD // Comment out this line when using external 
-                             // webserver
+// webserver
 #define WEBSITE_ON_EXTERNAL_WEBSERVER // Comment this line out the using SD 
                                       // card
 
@@ -38,19 +38,19 @@ void setup() {
 
   // SD card
 #ifdef WEBSITE_ON_SD_CARD
-    Serial.println("Initializing SD card...");
-    if (!SD.begin(4)) {
-      Serial.println("ERROR - SD card initialization failed!");
-      return;
-    }
-    Serial.println("SUCCESS - SD card initialized.");
+  Serial.println("Initializing SD card...");
+  if (!SD.begin(4)) {
+    Serial.println("ERROR - SD card initialization failed!");
+    return;
+  }
+  Serial.println("SUCCESS - SD card initialized.");
 
-    Serial.println("Searching for website on SD card...");
-    if (!SD.exists("index.htm")) {
-      Serial.println("ERROR - Can't find index.htm!");
-      return;
-    }
-    Serial.println("SUCCESS - Found file.");
+  Serial.println("Searching for website on SD card...");
+  if (!SD.exists("index.htm")) {
+    Serial.println("ERROR - Can't find index.htm!");
+    return;
+  }
+  Serial.println("SUCCESS - Found file.");
 #endif
 }
 
