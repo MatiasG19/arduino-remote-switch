@@ -88,10 +88,10 @@ jobs:
 
       - name: Ping
         run: |
-          if curl -f http://localhost:80 | grep -q "<title>Arduino Remote Switch</title>"; then
+          if curl -f http://localhost:80 | grep -q ">Arduino Remote Switch</title>"; then
               echo "Title found!"
           else
-              echo "Error: '<title>Arduino Remote Switch</title>' not found." >&2
+              echo "Error: '>Arduino Remote Switch</title>' not found." >&2
               exit 1
           fi
 
