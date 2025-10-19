@@ -51,14 +51,20 @@ Recommended way is to deploy the website on a dedicated webserver due to problem
 - Comment in `#define WEBSITE_ON_EXTERNAL_WEBSERVER`
 - Set the IP address in the `src.ino` file and save.
 
-2. In `web/src/index.htm`
+2. Create a directory on your server e.g. `remote-switch` and copy `web/src/config.json` to it
 
-- Set the `URL` constant to the IP address of the arduino ethernet shield
+- `mkdir remote-switch`
+
+3. In `remote-switch/config.json`
+
+- Set the `apiUrl` constant to the IP address of the arduino ethernet shield
+- (optional) Change the `title`
 
 3. Deploy the webserver using docker
 
-- docker build -t remote-switch .
-- docker run -p 80:80 remote-switch
+- `cd` into `remote-switch` directory
+- docker pull ghcr.io/matiasg19/remote-switch:latest
+- docker run -p 80:80 -v ./config.json:/usr/share/nginx/html/config.json remote-switch
 
 4. Test if the website can be reached by typing the IP into the web browser.
 
