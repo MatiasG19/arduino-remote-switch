@@ -119,6 +119,11 @@ void sendResponse(String request, EthernetClient client) {
   client.println("HTTP/1.1 200 OK");
   #ifdef WEBSITE_ON_EXTERNAL_WEBSERVER
   client.println("Access-Control-Allow-Origin: *");
+  client.println("Access-Control-Allow-Methods: GET");
+  client.println("Access-Control-Allow-Headers: Content-Type");
+  client.println("Content-Type: text/plain");
+  client.println("Connection: close");
+  client.println();
   #endif
 
   // Send file to client
