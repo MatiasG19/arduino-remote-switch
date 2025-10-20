@@ -33,11 +33,13 @@ jobs:
         with:
           context: ./web
           push: true
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
           tags: |
             ghcr.io/matiasg19/arduino-remote-switch:latest
             ghcr.io/matiasg19/arduino-remote-switch:${{ github.ref_name }}
-          labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64
+          build-args: |
+            TAG=${{ github.ref_name }}
 
       - name: Build and push Docker image (prerelease)
         uses: docker/build-push-action@v6
@@ -45,8 +47,10 @@ jobs:
         with:
           context: ./web
           push: true
+          labels: ${{ steps.meta.outputs.labels }}
+          platforms: linux/amd64,linux/arm64
           tags: |
             ghcr.io/matiasg19/arduino-remote-switch:pre
             ghcr.io/matiasg19/arduino-remote-switch:${{ github.ref_name }}
-          labels: ${{ steps.meta.outputs.labels }}
-          platforms: linux/amd64,linux/arm64
+          build-args: |
+            TAG=${{ github.ref_name }}
