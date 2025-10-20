@@ -57,7 +57,7 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v6
         with:
-          node-version: 22.x
+          node-version: 24.x
 
       - name: Install dependecies
         working-directory: ${{ env.WEB_PATH }}
@@ -66,3 +66,34 @@ jobs:
       - name: Check format
         working-directory: ${{ env.WEB_PATH }}
         run: npm run format:check
+
+  Docker:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+
+      - name: Docker build
+        working-directory: web
+        run: docker build -t remote-switch .
+
+      - name: Run container
+        run: |
+          docker run --rm -d \
+          -p 80:80 \
+          --name remote-switch remote-switch
+
+      - name: Wait for container to start
+        run: sleep 5
+
+      - name: Ping
+        run: |
+          if curl -f http://localhost:80 | grep -q ">Arduino Remote Switch</title>"; then
+              echo "Title found!"
+          else
+              echo "Error: '>Arduino Remote Switch</title>' not found." >&2
+              exit 1
+          fi
+
+      - name: Stop container
+        run: docker stop remote-switch

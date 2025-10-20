@@ -1,8 +1,15 @@
+// #define WEBSITE_ON_SD_CARD // Comment out this line when using external
+// webserver
+#define WEBSITE_ON_EXTERNAL_WEBSERVER // Comment this line out the using SD
+                                      // card
+
 #include <Ethernet.h>
+#ifdef WEBSITE_ON_SD_CARD
 #include <SD.h>
+#endif
 
 byte mac[] = {0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xED};
-IPAddress ip(192, 168, 0, 10);
+IPAddress ip(192, 168, 0, 10); // Edit IP address here
 EthernetServer server(80);
 long delayStart;
 
@@ -30,6 +37,7 @@ void setup() {
   delayStart = millis();
 
   // SD card
+#ifdef WEBSITE_ON_SD_CARD
   Serial.println("Initializing SD card...");
   if (!SD.begin(4)) {
     Serial.println("ERROR - SD card initialization failed!");
@@ -43,6 +51,7 @@ void setup() {
     return;
   }
   Serial.println("SUCCESS - Found file.");
+#endif
 }
 
 void loop() {
@@ -110,9 +119,18 @@ void loop() {
 
 void sendResponse(String request, EthernetClient client) {
   client.println("HTTP/1.1 200 OK");
+#ifdef WEBSITE_ON_EXTERNAL_WEBSERVER
+  client.println("Access-Control-Allow-Origin: *");
+  client.println("Access-Control-Allow-Methods: GET");
+  client.println("Access-Control-Allow-Headers: Content-Type");
+  client.println("Content-Type: text/plain");
+  client.println("Connection: close");
+  client.println();
+#endif
 
   // Send file to client
   if (request == "") {
+#ifdef WEBSITE_ON_SD_CARD
     request = "index.htm";
     client.println("Content-Type: text/html\n\r\n\r");
     File webFile = SD.open(request);
@@ -122,6 +140,10 @@ void sendResponse(String request, EthernetClient client) {
       }
       webFile.close();
     }
+#endif
+#ifdef WEBSITE_ON_EXTERNAL_WEBSERVER
+    client.println("HTTP/1.1 404 Not Found\n\r");
+#endif
   }
   // Button actions and status request
   else {
