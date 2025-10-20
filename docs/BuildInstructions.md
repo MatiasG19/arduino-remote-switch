@@ -63,8 +63,7 @@ Recommended way is to deploy the website on a dedicated webserver due to problem
 3. Deploy the webserver using docker
 
 - `cd` into `remote-switch` directory
-- docker pull ghcr.io/matiasg19/arduino-remote-switch:latest
-- docker run -p 80:80 -v ./config.json:/usr/share/nginx/html/config.json remote-switch
+- docker run -p 80:80 -v ./config.json:/usr/share/nginx/html/config.json ghcr.io/matiasg19/arduino-remote-switch:latest
 
 4. Test if the website can be reached by typing the IP into the web browser.
 
