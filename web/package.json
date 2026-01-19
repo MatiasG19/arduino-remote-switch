@@ -11,7 +11,7 @@
     "format:fix": "npx prettier --write ./src"
   },
   "devDependencies": {
-    "prettier": "3.7.4"
+    "prettier": "3.8.0"
   },
   "engines": {
     "node": "^24",
