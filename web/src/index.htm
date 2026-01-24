@@ -10,38 +10,10 @@
     <button id="powerStatus" type="button" class="statusButton" disabled>
       NO CONNECTION
     </button>
-    <button
-      id="powerBtn"
-      type="button"
-      class="activeButton"
-      onclick="sendCommand(CMD_POWER_ON)"
-    >
-      POWER ON
-    </button>
-    <button
-      id="standByBtn"
-      type="button"
-      class="activeButton"
-      onclick="sendCommand(CMD_STAND_BY)"
-    >
-      STANDBY
-    </button>
-    <button
-      id="resetBtn"
-      type="button"
-      class="activeButton"
-      onclick="sendCommand(CMD_RESET)"
-    >
-      RESET
-    </button>
-    <button
-      id="killBtn"
-      type="button"
-      class="activeButton"
-      onclick="sendCommand(CMD_KILL)"
-    >
-      KILL
-    </button>
+    <button id="powerBtn" type="button" class="activeButton">POWER ON</button>
+    <button id="standByBtn" type="button" class="activeButton">STANDBY</button>
+    <button id="resetBtn" type="button" class="activeButton">RESET</button>
+    <button id="killBtn" type="button" class="activeButton">KILL</button>
 
     <div class="version">Version %version%</div>
 
@@ -135,6 +107,21 @@
       const REQ_POWER_STATUS = 'powerStatus'
       let apiUrl = 'http://192.168.0.10'
 
+      function initializeEvents() {
+        document
+          .getElementById('powerBtn')
+          .addEventListener('click', () => sendCommand(CMD_POWER_ON))
+        document
+          .getElementById('standByBtn')
+          .addEventListener('click', () => sendCommand(CMD_STAND_BY))
+        document
+          .getElementById('resetBtn')
+          .addEventListener('click', () => sendCommand(CMD_RESET))
+        document
+          .getElementById('killBtn')
+          .addEventListener('click', () => sendCommand(CMD_KILL))
+      }
+
       async function loadConfig() {
         try {
           const response = await fetch('config.json')
@@ -151,6 +138,7 @@
       }
 
       await loadConfig()
+      initializeEvents()
 
       setInterval(() => {
         requestStatus(REQ_POWER_STATUS)
@@ -161,15 +149,12 @@
         if (state == 'on') {
           powerStatus.textContent = 'POWERED ON'
           powerStatus.style.color = '#27e670'
-          powerStatus.style.boxShadow.color = '#27e670'
         } else if (state == 'off') {
           powerStatus.textContent = 'POWERED OFF'
           powerStatus.style.color = '#eb1e8f'
-          powerStatus.style.boxShadow.color = '#eb1e8f'
         } else {
           powerStatus.textContent = 'NO CONNECTION'
           powerStatus.style.color = '#b413ff'
-          powerStatus.style.boxShadow.color = '#b413ff'
         }
       }
 
