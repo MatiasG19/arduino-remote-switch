@@ -14,6 +14,9 @@
     <button id="standByBtn" type="button" class="activeButton">STANDBY</button>
     <button id="resetBtn" type="button" class="activeButton">RESET</button>
     <button id="killBtn" type="button" class="activeButton">KILL</button>
+    <button id="shutdownBtn" type="button" class="activeButton" hidden>
+      SHUTDOWN
+    </button>
 
     <div class="version">Version %version%</div>
 
@@ -106,6 +109,7 @@
         CMD_KILL = 'kill'
       const REQ_POWER_STATUS = 'powerStatus'
       let apiUrl = 'http://192.168.0.10'
+      let shutdownButton = null
 
       function initializeEvents() {
         document
@@ -120,6 +124,9 @@
         document
           .getElementById('killBtn')
           .addEventListener('click', () => sendCommand(CMD_KILL))
+        document
+          .getElementById('shutdownBtn')
+          .addEventListener('click', () => sendShutDown())
       }
 
       async function loadConfig() {
@@ -132,6 +139,13 @@
           document.getElementById('app-title').textContent = config.title
           document.getElementById('app-heading').textContent = config.title
           apiUrl = config.apiUrl
+          if (config.shutdownButton) {
+            console.log('Test')
+            const shutdownBtn = document.getElementById('shutdownBtn')
+            shutdownButton = config.shutdownButton
+            shutdownBtn.textContent = shutdownButton.name
+            shutdownBtn.hidden = false
+          }
         } catch (error) {
           console.error('Error loading config file:', error)
         }
@@ -196,6 +210,22 @@
         }
         xhttp.open('GET', `${apiUrl}/${request}`, true)
         xhttp.send()
+      }
+
+      async function sendShutDown() {
+        if (!shutdownButton) return
+
+        const response = await fetch(shutdownButton.url, {
+          method: shutdownButton.method,
+          headers: shutdownButton.headers,
+          body: new URLSearchParams(shutdownButton.body),
+        })
+
+        if (!response.ok) {
+          throw new Error(
+            `Error sending shutdown ${response.status}: ${await response.text()}`,
+          )
+        }
       }
     </script>
   </body>
