@@ -1,4 +1,11 @@
 {
   "title": "Arduino Remote Switch",
-  "apiUrl": ""
+  "apiUrl": "",
+  "shutdownButton": {
+    "name": "SHUTDOWN",
+    "url": "",
+    "method": "POST",
+    "headers": {},
+    "body": {}
+  }
 }
